@@ -1,204 +1,283 @@
 # MailMind — Intelligent Email Thread Summarizer
 
-MailMind is a local AI-powered email summarization application that
-extracts important information from email conversations.
+MailMind is an AI-powered email summarization application designed to help users understand lengthy email conversations quickly. It extracts key information, highlights important discussions, identifies action items, and organizes deadlines into a structured summary.
+
+The application uses a locally running AI model to process email content.
 
 ## Features
 
-- AI-powered email summarization
-- Action item and deadline extraction
-- Responsible person identification
-- Email file (.eml) upload and parsing
-- Summary history
-- User authentication
-- SQLite database storage
-- Local AI inference using Ollama
+- **AI-Powered Summarization** — Convert lengthy email conversations into concise summaries.
+- **Action Item Extraction** — Identify tasks mentioned in email threads.
+- **Deadline Identification** — Extract deadlines and time-sensitive information.
+- **Responsible Person Detection** — Identify people associated with specific tasks when stated in the email.
+- **Email File Upload** — Upload `.eml` files for summarization.
+- **Structured Results** — Organize summaries, decisions, discussion points, and unanswered questions.
+- **Summary History** — Access previously generated summaries.
+- **User Authentication** — Register and log in to access the application.
+- **Local AI Processing** — Generate summaries using a locally running language model.
+- **Caching** — Reuse previously generated summaries when the input matches.
 
-## Technologies Used
+## Technology Stack
 
-- Frontend: React, Vite
-- Backend: Python, FastAPI
-- AI: Ollama, Qwen 2.5 3B
-- Database: SQLite
+| Component | Technology |
+|---|---|
+| Frontend | React, Vite |
+| Backend | Python, FastAPI |
+| AI Runtime | Ollama |
+| AI Model | Qwen 2.5 3B |
+| Database | SQLite |
+| Authentication | JWT |
+| Password Security | bcrypt |
 
-## System Requirements
+## Architecture
 
-- Windows 10 or Windows 11
+```text
+User
+ |
+ v
+React Frontend
+ |
+ v
+FastAPI Backend
+ |
+ +---- Email Parsing
+ |
+ +---- AI Summarization
+ |        |
+ |        v
+ |      Ollama
+ |        |
+ |        v
+ |    Qwen 2.5 3B
+ |
+ +---- SQLite Database
+ |
+ v
+Structured Email Summary
+```
+
+## Prerequisites
+
+Install the following software before running the project:
+
 - Python 3.12
 - Node.js and npm
+- Git
 - Ollama
-- Internet connection for initial software and model downloads
 
-## Installation and Setup
+A Windows computer is recommended for the setup instructions below.
 
-### Step 1: Extract the Project
+## Installation
 
-1. Copy the MailMind ZIP file to your computer.
-2. Right-click the ZIP file.
-3. Select Extract All.
-4. Open the extracted project folder.
+### 1. Clone the Repository
 
-### Step 2: Install Python
+```bash
+git clone https://github.com/PRAVEEN092003/mailmind-email-summarizer.git
+cd mailmind-email-summarizer
+```
 
-Install Python 3.12 if it is not already installed.
+### 2. Download the AI Model
 
-Verify the installation:
+Install Ollama, open a terminal, and run:
 
-    python --version
+```bash
+ollama pull qwen2.5:3b
+```
 
-### Step 3: Install Node.js
+Verify that the model is available:
 
-Install Node.js LTS.
+```bash
+ollama list
+```
 
-Verify the installation:
+Keep Ollama running while using MailMind.
 
-    node --version
-    npm --version
+### 3. Configure the Backend
 
-### Step 4: Install Ollama
+Open a terminal in the project directory.
 
-Install Ollama for Windows.
+Navigate to the backend:
 
-After installation, open Command Prompt and download the model:
+```bash
+cd backend
+```
 
-    ollama pull qwen2.5:3b
+Create a virtual environment:
 
-Wait until the model download completes.
+```bash
+python -m venv venv
+```
 
-Verify the model:
+Activate the environment on Windows Command Prompt:
 
-    ollama list
+```cmd
+venv\Scripts\activate.bat
+```
 
-### Step 5: Configure the Backend
+For Windows PowerShell:
 
-Open Command Prompt.
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
-Navigate to the backend directory:
+Install the Python dependencies:
 
-    cd /d "C:\path\to\MailMind\backend"
+```bash
+python -m pip install -r requirements.txt
+```
 
-Create a Python virtual environment:
+If the project includes `.env.example`, copy it to `.env` and configure the required environment variables according to the existing configuration.
 
-    python -m venv venv
+Do not commit passwords, secrets, or private environment files to GitHub.
 
-Activate the environment:
-
-    venv\Scripts\activate.bat
-
-Install the dependencies:
-
-    python -m pip install -r requirements.txt
-
-If the project includes `.env.example`, create a copy named `.env`.
-
-Configure the environment variables according to the existing project
-configuration. Do not share production secrets or passwords.
-
-### Step 6: Start the Backend
+### 4. Start the Backend
 
 From the backend directory, run:
 
-    python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```bash
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
 
-Keep this Command Prompt window open.
+The backend should be available at:
 
-Verify the backend:
+```text
+http://127.0.0.1:8000
+```
 
-    http://127.0.0.1:8000/api/health
+Health check:
+
+```text
+http://127.0.0.1:8000/api/health
+```
 
 API documentation:
 
-    http://127.0.0.1:8000/docs
+```text
+http://127.0.0.1:8000/docs
+```
 
-### Step 7: Install Frontend Dependencies
+Keep the backend terminal open.
 
-Open another Command Prompt window.
+### 5. Configure the Frontend
 
-Navigate to the frontend directory:
+Open another terminal and navigate to the frontend directory:
 
-    cd /d "C:\path\to\MailMind\frontend"
+```bash
+cd frontend
+```
 
-Install dependencies:
+Install the dependencies:
 
-    npm install
+```bash
+npm install
+```
 
-### Step 8: Start the Frontend
+### 6. Start the Frontend
 
 Run:
 
-    npm run dev
+```bash
+npm run dev
+```
 
-Open the local URL displayed in the terminal.
+Open the local URL displayed in the terminal. The default Vite development URL is usually:
 
-Usually:
-
-    http://localhost:5173
+```text
+http://localhost:5173
+```
 
 Keep both the backend and frontend running while using the application.
 
 ## How to Use
 
 1. Open MailMind in your browser.
-2. Register an account or log in.
-3. Open the Summarize page.
-4. Paste an email conversation or upload an .eml file.
-5. Click Summarize.
-6. Review the generated summary, action items, deadlines,
-   responsible persons, and urgency.
-7. Access previously saved summaries through History.
+2. Register a new account or log in.
+3. Open the summarization interface.
+4. Paste an email conversation or upload an `.eml` file.
+5. Start the summarization process.
+6. Review the generated summary, discussion points, action items, deadlines, and unanswered questions.
+7. Open the history section to access previously saved summaries.
 
 ## Database
 
-MailMind uses SQLite for persistent storage.
+MailMind uses SQLite to store application data and summary history.
 
-The database file is:
+The database is normally located at:
 
-    backend/email_summarizer.db
+```text
+backend/email_summarizer.db
+```
 
-Keep a backup of the database if you need to preserve existing users
-and summary history.
+The database may be initialized automatically by the application, depending on the existing backend configuration.
 
-Do not delete or replace an existing database without backing it up.
+If you need to preserve existing users and summaries, back up the database before replacing or deleting it.
+
+Do not upload a database containing private user information to a public repository.
 
 ## Troubleshooting
 
-### Ollama is not connected
+### Ollama Connection Error
 
-Ensure Ollama is running and the required model is installed:
+Ensure Ollama is installed and running.
 
-    ollama list
+Check available models:
 
-### Backend dependency errors
+```bash
+ollama list
+```
 
-Activate the virtual environment and run:
+If the required model is missing:
 
-    python -m pip install -r requirements.txt
+```bash
+ollama pull qwen2.5:3b
+```
 
-### Frontend dependency errors
+### Backend Dependency Errors
+
+Activate the virtual environment and reinstall the dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Frontend Dependency Errors
 
 From the frontend directory, run:
 
-    npm install
+```bash
+npm install
+```
 
-### Port already in use
+### Port Already in Use
 
-Stop the application using the occupied port or configure an available
-port and update the frontend API configuration if necessary.
+Stop the application occupying the required port or configure an available port and update the corresponding frontend API configuration if necessary.
 
-### Database errors
+### Summarization Is Slow
 
-Check that the backend has permission to access its database directory
-and that the database file exists when required.
+Processing time depends on the email length, available system resources, and local AI inference performance.
 
-## Important Notes
+## Privacy
 
-- Ollama and the required model must be installed on each new computer.
-- Python and Node.js dependencies must be installed on each new computer.
-- The application runs locally; AI inference uses the configured local
-  Ollama model.
-- Keep environment secrets private.
-- Back up the SQLite database before making changes.
+MailMind is designed to perform AI inference using a locally running Ollama model.
+
+Application data is stored according to the configured backend and database implementation. Users should avoid submitting sensitive information to systems they do not control.
+
+## Future Improvements
+
+- Improved summary accuracy
+- Better extraction of action items and deadlines
+- Enhanced email thread handling
+- Additional usability and accessibility improvements
+- Performance optimization
 
 ## License
 
-Specify the project license here if applicable.
+No license has been specified yet. All rights are reserved by default unless a license is added to this repository.
+
+## Author
+
+PRAVEEN R   (B.TECH CSBS)
+
+**Praveen**
+
+GitHub: [PRAVEEN092003](https://github.com/PRAVEEN092003)
